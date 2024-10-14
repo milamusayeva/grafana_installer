@@ -19,23 +19,3 @@ echo "deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com stab
 
 echo "Adding Grafana beta repository..."
 echo "deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com beta main" | sudo tee -a /etc/apt/sources.list.d/grafana.list
-
-echo "Updating APT package list..."
-sudo apt-get update
-
-echo "Installing Grafana..."
-sudo apt-get install grafana
-
-echo "Reloading system daemon..."
-sudo systemctl daemon-reload
-
-echo "Starting Grafana server..."
-sudo systemctl start grafana-server
-
-echo "Checking Grafana server status..."
-sudo systemctl status grafana-server | grep "Active"
-
-echo "Enabling Grafana server to start on boot..."
-sudo systemctl enable grafana-server.service
-
-echo "Grafana installation and setup complete!"
