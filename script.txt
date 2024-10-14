@@ -1,52 +1,40 @@
 #!/bin/bash
 
-# Exit immediately if a command exits with a non-zero status.
 set -e
 
-# Ensure the script is run as root
 if [ "$(id -u)" != "0" ]; then
    echo "This script must be run as root" 1>&2
    exit 1
 fi
 
-# Step 1: Install prerequisites
 echo "Installing prerequisites..."
 sudo apt-get install -y apt-transport-https software-properties-common wget
 
-# Step 2: Set up Grafana GPG key and repository
 echo "Setting up Grafana GPG key and repository..."
 sudo mkdir -p /etc/apt/keyrings/
 wget -q -O - https://apt.grafana.com/gpg.key | gpg --dearmor | sudo tee /etc/apt/keyrings/grafana.gpg > /dev/null
 
-# Step 3: Add Grafana to the APT sources list for stable releases
 echo "Adding Grafana stable repository..."
 echo "deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com stable main" | sudo tee -a /etc/apt/sources.list.d/grafana.list
 
-# Step 4: Add Grafana to the APT sources list for beta releases
 echo "Adding Grafana beta repository..."
 echo "deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com beta main" | sudo tee -a /etc/apt/sources.list.d/grafana.list
 
-# Step 5: Update APT package list
 echo "Updating APT package list..."
 sudo apt-get update
 
-# Step 6: Install Grafana
 echo "Installing Grafana..."
 sudo apt-get install grafana
 
-# Step 7: Reload system daemon
 echo "Reloading system daemon..."
 sudo systemctl daemon-reload
 
-# Step 8: Start Grafana server
 echo "Starting Grafana server..."
 sudo systemctl start grafana-server
 
-# Step 9 and 10: Check Grafana server status
 echo "Checking Grafana server status..."
 sudo systemctl status grafana-server | grep "Active"
 
-# Step 11: Enable Grafana server to start on boot
 echo "Enabling Grafana server to start on boot..."
 sudo systemctl enable grafana-server.service
 
